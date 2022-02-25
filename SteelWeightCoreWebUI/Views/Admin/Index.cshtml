@@ -1,0 +1,36 @@
+﻿@using SteelWeightCoreWebUI.Models.Entities
+@model IEnumerable<Steel>
+
+@{
+    ViewData["Title"] = "작업 수정";
+}
+
+<link rel="stylesheet" href="~/css/admin_index_styles.css" />
+
+<div class="text-left">
+    <h3>작업 수정</h3>
+</div>
+<div>
+    <table class="table table-striped table-condensed table-bordered">
+        <tr>
+            <th>날짜</th>
+            <th>작업실</th>
+            <th>중량(kg)</th>
+            <th></th>
+        </tr>
+        @foreach (var item in Model) {
+            <tr>
+                <td>@(((DateTime)item.date).ToString("yyyy-MM-dd"))</td>
+                <td>@item.workroom</td>
+                <td class="text-end">@string.Format("{0:#,##0}", item.weight)</td>
+                <td>
+                    @Html.ActionLink("수정", "Edit", new { uid = item.uid }, new { @class = "btn btn-secondary" }) 
+                    @if (ViewBag.IsMobile) {
+                    <br />
+                    }
+                    @Html.ActionLink("삭제", "Delete", new { uid = item.uid }, new { @class = "btn btn-danger" })
+                </td>
+            </tr>
+        }
+    </table>
+</div>

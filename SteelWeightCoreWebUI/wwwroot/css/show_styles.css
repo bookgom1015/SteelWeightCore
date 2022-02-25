@@ -1,0 +1,38 @@
+﻿.date-nav-part {
+    width: 200px;
+    float: left;
+}
+
+@media (min-width: 768px) {
+    .chart-part {
+        width: calc(100% - 200px);
+        float: right;
+    }
+}
+
+a[class="day-btn btn"] {
+    margin-left: 30px;
+}
+
+a[class="dayly-btn btn"] {
+    margin-left: 5px;
+}
+
+div[id="sidebar-nav"] {
+    margin-top: 30px;
+    margin-left: 30px;
+}
+
+details > summary {
+    cursor: pointer;
+    transition: background 0.5s;
+}
+
+    details > summary::marker {
+        color: orangered;
+        transition: color 0.35s;
+    }
+
+details[open] > summary::marker {
+    color: greenyellow;
+}

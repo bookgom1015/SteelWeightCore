@@ -1,0 +1,4 @@
+﻿div[class="date-nav"] {
+    height: calc(100vh - 140px);
+    overflow: auto;
+}

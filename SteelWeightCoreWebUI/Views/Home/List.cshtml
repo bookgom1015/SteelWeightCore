@@ -1,0 +1,8 @@
+﻿@using SteelWeightCoreWebUI.Models.Entities
+@model IEnumerable<Steel>
+
+<div>
+    @foreach (var steel in Model) {
+        <p>@string.Format("{0}, {1}, {2}, {3}", steel.uid, ((DateTime)steel.date).ToString("yyyy-MM-dd"), steel.workroom, steel.weight)</p>
+    }
+</div>

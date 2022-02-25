@@ -1,0 +1,45 @@
+﻿@using System.Text
+@using SteelWeightCoreWebUI.ViewModels
+@model ShowViewModel
+
+<link rel="stylesheet" href="~/css/nav_part_mobile_styles.css" />
+
+<input id="menu-icon" type="checkbox" />
+<label for="menu-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+</label>
+<div class="sidebar">
+    <div id="sidebar-nav">
+        @foreach (var yearMapPair in Model.Dates) {
+            <details>
+                <summary>
+                    @Html.ActionLink(string.Format("{0}년", yearMapPair.Key), "Show", "Chart", new { year = yearMapPair.Key }, new { @class = "btn" })
+                </summary>
+                <div>
+                    @foreach (var monthMapPair in yearMapPair.Value) {
+                        <details>
+                            <summary>
+                                @Html.ActionLink(
+                                    string.Format("{0}년 {1}월", yearMapPair.Key, monthMapPair.Key),
+                                    "Show", "Chart",
+                                    new { year = yearMapPair.Key, month = monthMapPair.Key }, new { @class = "dayly-btn btn" })
+                            </summary>
+                            <div>
+                                @foreach (var day in monthMapPair.Value) {
+                                    <div>
+                                        @Html.ActionLink(string.Format(
+                                            "{0}년 {1}월 {2}일", yearMapPair.Key, monthMapPair.Key, day),
+                                            "Show", "Chart",
+                                            new { year = yearMapPair.Key, month = monthMapPair.Key, day = day }, new { @class = "day-btn btn" })
+                                    </div>
+                                }
+                            </div>
+                        </details>
+                    }
+                </div>
+            </details>
+        }
+    </div>
+</div>

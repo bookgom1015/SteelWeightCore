@@ -1,0 +1,7 @@
+# ignore all binary files
+**/bin/*.*
+**/bin/**
+
+# ignore all object files
+**/obj/*.*
+**/obj/**

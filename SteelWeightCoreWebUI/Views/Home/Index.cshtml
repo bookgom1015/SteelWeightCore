@@ -1,0 +1,41 @@
+﻿@using SteelWeightCoreWebUI.Models.Entities;
+@model Steel
+
+@{
+    ViewData["Title"] = "작업량 입력";
+
+    string now = DateTime.Now.ToString("yyyy-MM-dd");
+
+    List<SelectListItem> workrooms = new List<SelectListItem>();
+    foreach (string workroom in ViewBag.Workrooms) {
+        workrooms.Add(new SelectListItem { Text = workroom });
+    }
+}
+
+<link rel="stylesheet" href="~/css/home_index_styles.css" />
+
+<div class="text-left">
+    <h3>작업량 입력</h3>
+</div>
+<div>
+    @using (Html.BeginForm()) {
+        <div class="form-group">
+            <label>날짜:</label>
+            @Html.TextBoxFor(x => x.date, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", max = now })
+            @Html.ValidationMessageFor(x => x.date)
+        </div>
+        <div class="form-group">
+            <label>작업실:</label>
+            @Html.DropDownListFor(x => x.workroom, workrooms, "작업실 선택", new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.workroom)
+        </div>
+        <div class="form-group">
+            <label>중량(kg):</label>
+            @Html.TextBoxFor(x => x.weight, new { @class = "form-control", @type = "number" })
+            @Html.ValidationMessageFor(x => x.weight)
+        </div>
+        <div class="text-right">
+            <input type="submit" value="제출하기" class="btn btn-primary" />
+        </div>
+    }
+</div>

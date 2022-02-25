@@ -1,0 +1,20 @@
+﻿@using SteelWeightCoreWebUI.ViewModels
+@model ShowViewModel
+
+@{
+    ViewData["Title"] = "작업량 차트";
+}
+
+<link rel="stylesheet" href="~/css/show_styles.css" />
+
+<!-- Desktop -->
+<div class="d-none d-sm-block date-nav-part">
+    <partial name="~/Views/Chart/NavPart.cshtml" />
+</div>
+<!-- Mobile -->
+<div class="d-block d-sm-none">
+    <partial name="~/Views/Chart/NavPartMobile.cshtml" />
+</div>
+<div class="chart-part">
+    <partial name="~/Views/Chart/ChartPart.cshtml" />
+</div>

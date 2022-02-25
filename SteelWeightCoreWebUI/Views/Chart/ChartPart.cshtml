@@ -1,0 +1,155 @@
+﻿@using System.Text
+@using SteelWeightCoreWebUI.ViewModels
+@model ShowViewModel
+
+@{
+    List<string> colors = new List<string> {
+        "153, 255, 255",
+        "255, 30, 30"
+    };
+
+    string labelAnchor;
+    string labelAlign;
+
+    if (ViewBag.IsMobile) {
+        labelAnchor = "start";
+        labelAlign = "right";
+    }
+    else {
+        labelAnchor = "middle";
+        labelAlign = "middle";
+    }
+}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+<style>
+    @if (ViewBag.IsMobile) {
+        @:div[class="chart-wrapper"] > canvas {
+        @:    height: 100vh;
+        @:}
+    }
+    else {
+        @:div[class="chart-wrapper"] > canvas {
+        @:    width: 100%;
+        @:}
+    }
+</style>
+
+<div class="chart-wrapper">
+    <canvas id="chart-canvas"></canvas>
+</div>
+<script>
+    var context = document.getElementById('chart-canvas');
+
+    const labels = [
+        @if (Model.Labels != null) {
+            StringBuilder labels = new StringBuilder();
+            foreach (var label in Model.Labels) {
+                labels.AppendFormat("\'{0}{1}\', ", label, Model.Suffix);
+            }
+
+            if (labels.Length > 0) {
+                labels.Remove(labels.Length - 2, 2);
+            }
+
+            @Html.Raw(labels.ToString())
+        }
+    ];
+
+    const data = {
+        labels: labels,
+        datasets: [
+            @if (Model.Datasets != null) {
+                int cnt = 0;
+                StringBuilder datasets = new StringBuilder();
+                foreach (var workroomMapPair in Model.Datasets) {
+                    datasets.AppendLine("{");
+                    datasets.AppendFormat("label: \'{0}\', \n", workroomMapPair.Key);
+                    datasets.AppendFormat("backgroundColor: \'rgba({0}, 0.25)\', \n", colors[cnt]);
+                    datasets.AppendFormat("borderColor: \'rgb({0})\', \n", colors[cnt]);
+                    datasets.AppendLine("borderWidth: 2,");
+                    datasets.AppendLine("maxBarThickness: 64,");
+                    datasets.Append("data: [ ");
+
+                    foreach (var label in Model.Labels) {
+                        var dateMap = workroomMapPair.Value;
+                        datasets.AppendFormat("{0}, ", dateMap.ContainsKey(label) ? dateMap[label] : 0);
+                    }
+                    datasets.Remove(datasets.Length - 2, 2);
+
+                    datasets.AppendLine(" ]");
+                    datasets.AppendLine("},");
+
+                    ++cnt;
+                }
+
+                if (datasets.Length > 0) {
+                    datasets.Remove(datasets.Length - 1, 1);
+                }
+
+                @Html.Raw(datasets.ToString())
+            }
+        ]
+    };
+
+    const config = {
+        type: 'bar',
+        data: data,
+        options: {
+            @if (ViewBag.IsMobile) {
+                @: maintainAspectRatio: false,
+                @: indexAxis: 'y',
+            }
+            plugins: {
+                title: {
+                    display: true,
+                    text: '@Html.Raw(Model.ChartTitle)',
+                    font: {
+                        size: 18
+                    }
+                },
+                datalabels: {
+                    anchor: '@labelAnchor', // remove this line to get label in middle of the bar
+                    align: '@labelAlign',
+                    formatter: (val) => (`${val}`),
+                    labels: {
+                        value: {
+                            color: 'black'
+                        }
+                    }
+
+                },
+                legend: {
+                    display: true
+                }
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        @if (!ViewBag.IsMobile) {
+                            @: callback: function(value, index, ticks) {
+                            @:     return value + ' kg';
+                            @: }
+                        }
+                    },
+                },
+                x: {
+                    ticks: {
+                        @if (ViewBag.IsMobile) {
+                            @: callback: function (value, index, ticks) {
+                            @:     return value + ' kg';
+                            @: },
+                        }
+                        maxRotation: 60,
+                        minRotation: 0
+                    }
+                }
+            }
+        }
+    };
+
+    Chart.register(ChartDataLabels);
+
+    const swChart = new Chart(context, config);
+</script>
